@@ -1,0 +1,48 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.0-M1'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'ru.team42'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '13'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+ext {
+	set('springCloudVersion', "2020.0.0-SNAPSHOT")
+}
+
+dependencies {
+//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+//	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//	implementation 'org.springframework.boot:spring-boot-starter-jersey'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+//	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.springframework.session:spring-session-jdbc'
+	runtimeOnly 'org.postgresql:postgresql'
+//	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'io.projectreactor:reactor-test'
+//	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+
+test {
+	useJUnitPlatform()
+}
