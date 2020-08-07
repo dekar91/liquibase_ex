@@ -1,20 +1,35 @@
 package ru.team42.Analyzer;
 
+import org.springframework.context.annotation.Primary;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "greet")
 public class Greeting {
 
-    private final long id;
-    private final String content;
+    @Id
+    private long id;
 
-    public Greeting(long id, String content) {
-        this.id = id;
-        this.content = content;
-    }
+    @Column(columnDefinition = "text null")
+    private String content;
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

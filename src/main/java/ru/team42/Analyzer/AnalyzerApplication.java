@@ -18,9 +18,9 @@ public class AnalyzerApplication {
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-//		dataSource.setDriverClassName("com.postgres.cj.jdbc.Driver");
+		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUsername("postgres");
-		dataSource.setPassword("qwerty");
+		dataSource.setPassword("postgres");
 		dataSource.setUrl(
 				"jdbc:postgresql://localhost:5432/test?createDatabaseIfNotExist=true");
 
