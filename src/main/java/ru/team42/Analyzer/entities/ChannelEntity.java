@@ -11,5 +11,5 @@ public class ChannelEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName="id")
-    private UserEntity user;
+    private User user;
 }
