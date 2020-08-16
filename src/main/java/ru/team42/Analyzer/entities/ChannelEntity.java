@@ -9,9 +9,7 @@ public class ChannelEntity {
     @Id
     private long id;
 
-    @Column(name = "user_id")
-    private long userId;
-
     @ManyToOne
+    @JoinColumn(name="user_id", referencedColumnName="id")
     private UserEntity user;
 }

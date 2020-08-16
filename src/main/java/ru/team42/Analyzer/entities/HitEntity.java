@@ -10,10 +10,12 @@ public class HitEntity {
     @Id
     private long id;
 
-    @Column(name = "channel_id")
-    private long channelId;
+//    @Column(columnDefinition = "channel_id")
+//    private long channelId;
+
 
     @ManyToOne
+    @JoinColumn(name="channel_id", referencedColumnName="id")
     private ChannelEntity channel;
 
     @Column

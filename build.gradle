@@ -1,4 +1,5 @@
 plugins {
+	id 'org.liquibase.gradle' version '2.0.4'
 	id 'org.springframework.boot' version '2.4.0-M1'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
@@ -12,6 +13,17 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+
+	liquibase {
+		activities {
+			main {
+				changeLogFile 'src/main/resources/db/changelog/db-diff.yaml'
+				url 'jdbc:postgresql://localhost:5432/test'
+				username 'postgres'
+				password 'qwerty'
+			}
+		}
+	}
 }
 
 repositories {
@@ -24,20 +36,34 @@ ext {
 	set('springCloudVersion', "2020.0.0-SNAPSHOT")
 }
 
+apply plugin: "org.liquibase.gradle"
+
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase:liquibase-core:3.8.1'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.1'
+	liquibaseRuntime 'org.postgresql:postgresql'
+	liquibaseRuntime("ch.qos.logback:logback-core:1.2.3")
+	liquibaseRuntime("ch.qos.logback:logback-classic:1.2.3")
+	liquibaseRuntime 'org.yaml:snakeyaml'
+	liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+//	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.springframework.session:spring-session-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 //	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-jersey'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-//	implementation 'org.flywaydb:flyway-core'
-//	implementation 'org.springframework.session:spring-session-jdbc'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'io.projectreactor:reactor-test'
 //	testImplementation 'org.springframework.security:spring-security-test'
 }
