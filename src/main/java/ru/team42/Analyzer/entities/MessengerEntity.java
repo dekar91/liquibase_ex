@@ -1,10 +1,10 @@
-package ru.team42.Analyzer.entities;
+package ru.team42.analyzer.entities;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "messengers")
-public class MessengerEntity {
+public class MessengerEntity extends BasicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messenger_generator")
@@ -13,5 +13,9 @@ public class MessengerEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName="id")
-    private User user;
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name="channel_id", referencedColumnName="id")
+    private ChannelEntity channel;
 }

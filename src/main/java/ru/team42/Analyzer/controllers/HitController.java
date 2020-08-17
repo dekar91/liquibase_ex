@@ -1,4 +1,4 @@
-package ru.team42.Analyzer.controllers;
+package ru.team42.analyzer.controllers;
 
 import org.springframework.web.bind.annotation.*;
 

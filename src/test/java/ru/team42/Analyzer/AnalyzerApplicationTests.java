@@ -1,4 +1,4 @@
-package ru.team42.Analyzer;
+package ru.team42.analyzer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

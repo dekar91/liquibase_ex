@@ -1,7 +1,9 @@
-package ru.team42.Analyzer.repositories;
+package ru.team42.analyzer.repositories;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-class UserRepository implements Repository<UserRepository, Long> {
+@Repository
+public interface UserRepository extends CrudRepository<UserRepository, Long> {
 
 }

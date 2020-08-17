@@ -1,8 +1,10 @@
-package ru.team42.Analyzer.repositories;
+package ru.team42.analyzer.repositories;
 
-import org.springframework.data.repository.Repository;
-import ru.team42.Analyzer.entities.ChannelEntity;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import ru.team42.analyzer.entities.ChannelEntity;
 
-public class ChannelRepository implements Repository<ChannelEntity, Long> {
+@Repository
+public interface ChannelRepository extends CrudRepository<ChannelEntity, Long> {
 
 }

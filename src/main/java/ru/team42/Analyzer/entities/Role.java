@@ -1,4 +1,4 @@
-package ru.team42.Analyzer.entities;
+package ru.team42.analyzer.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -6,14 +6,17 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority {
+@Table(name = "roles")
+public class Role extends BasicEntity implements GrantedAuthority {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_generator")
+    @SequenceGenerator(name="role_generator", sequenceName = "role_id_seq")
     private Long id;
     private String name;
     @Transient
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private Set<UserEntity> users;
     public Role() {
     }
 
@@ -42,11 +45,11 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public Set<User> getUsers() {
+    public Set<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(Set<UserEntity> users) {
         this.users = users;
     }
 

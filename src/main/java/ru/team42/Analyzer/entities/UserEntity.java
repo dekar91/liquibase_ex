@@ -1,18 +1,17 @@
-package ru.team42.Analyzer.entities;
+package ru.team42.analyzer.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class UserEntity extends BasicEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
@@ -35,7 +34,7 @@ public class User implements UserDetails {
     @OneToMany
     private List<HitEntity> hits;
 
-    public User() {
+    public UserEntity() {
     }
 
     public Long getId() {

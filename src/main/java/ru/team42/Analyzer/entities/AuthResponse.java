@@ -1,4 +1,4 @@
-package ru.team42.Analyzer.entities;
+package ru.team42.analyzer.entities;
 
 public class AuthResponse {
 }

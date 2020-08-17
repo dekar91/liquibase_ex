@@ -1,7 +1,9 @@
-package ru.team42.Analyzer.repositories;
+package ru.team42.analyzer.repositories;
 
-import org.springframework.data.repository.Repository;
-import ru.team42.Analyzer.entities.HitEntity;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import ru.team42.analyzer.entities.HitEntity;
 
-public class HitRepository implements Repository<HitEntity, Long> {
+@Repository
+public interface HitRepository extends CrudRepository<HitEntity, Long> {
 }

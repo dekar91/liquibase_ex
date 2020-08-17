@@ -1,7 +1,9 @@
-package ru.team42.Analyzer.repositories;
+package ru.team42.analyzer.repositories;
 
-import org.springframework.data.repository.Repository;
-import ru.team42.Analyzer.entities.Role;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import ru.team42.analyzer.entities.Role;
 
-public class RoleRepository implements Repository<Role, Long> {
+@Repository
+public interface RoleRepository extends CrudRepository<Role, Long> {
 }

@@ -1,4 +1,4 @@
-package ru.team42.Analyzer;
+package ru.team42.analyzer;
 
 
 import org.springframework.context.annotation.Bean;

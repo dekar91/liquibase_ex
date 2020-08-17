@@ -1,7 +1,7 @@
-package ru.team42.Analyzer.controllers;
+package ru.team42.analyzer.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import ru.team42.Analyzer.entities.AuthResponse;
+import ru.team42.analyzer.entities.AuthResponse;
 
 @RestController
 public class AuthController extends BasicController {

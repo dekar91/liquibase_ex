@@ -1,11 +1,7 @@
-package ru.team42.Analyzer;
+package ru.team42.analyzer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 public class AnalyzerApplication {

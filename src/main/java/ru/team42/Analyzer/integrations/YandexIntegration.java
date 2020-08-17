@@ -1,4 +1,4 @@
-package ru.team42.Analyzer.integrations;
+package ru.team42.analyzer.integrations;
 
 public class YandexIntegration implements IntegrationInterface {
 }
