@@ -9,6 +9,8 @@ group = 'ru.team42'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '13'
 
+
+
 configurations {
 	liquibaseRuntime.extendsFrom runtime
 
@@ -16,21 +18,24 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 
+	Properties liquibaseProps = new Properties()
+	liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.properties"))
+
+	Properties applicationProps = new Properties()
+	applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
+
 	liquibase {
+
 
 		activities {
 
 			main {
-//				File propsFile = new File("src/main/resources/liquibase.properties")
-//				Properties properties = new Properties()
-//				properties.load(new FileInputStream(propsFile))
-
-				referenceUrl 'hibernate:spring:ru.team42.analyzer.entities?dialect=org.hibernate.dialect.PostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
-				driver 'org.postgresql.Driver'
-				changeLogFile 'src/main/resources/db/changelog/db-diff.yaml'
-				url 'jdbc:postgresql://localhost:5432/test'
-				username 'postgres'
-				password 'qwerty'
+				referenceUrl 'hibernate:spring:'+ liquibaseProps.getProperty('liquibase.domain.package') +'?dialect='+applicationProps.getProperty('spring.jpa.database-platform')+'&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+				driver applicationProps.getProperty('spring.datasource.driver-class-name')
+				changeLogFile liquibaseProps.getProperty('liquibase.changelog.path') + migrationName() + '.yaml'
+				url applicationProps.getProperty('spring.datasource.url')
+				username applicationProps.getProperty('spring.datasource.username')
+				password applicationProps.getProperty('spring.datasource.password')
 			}
 		}
 	}
@@ -92,6 +97,33 @@ dependencies {
 
 }
 
+static String getVersionName() {
+	try {
+		def branchout = new ByteArrayOutputStream()
+		commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+
+		def branch = branchout.toString().trim()
+
+		if (branch.equals("master")) {
+			def stdout = new ByteArrayOutputStream()
+			commandLine 'git', 'describe', '--tags'
+
+			return stdout.toString().trim()
+		} else {
+			return branch;
+		}
+	}
+	catch (ignored) {
+		return 'default';
+	}
+}
+
+static String migrationName() {
+
+	def date = new Date()
+	def formattedDate = date.format('yyyyMMddHHmmss')
+	return formattedDate + '_' +  getVersionName()
+}
 
 test {
 	useJUnitPlatform()
