@@ -3,7 +3,7 @@ package ru.team42.analyzer.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "hits")
+@Table(name = "hit")
 public class HitEntity extends BasicEntity {
 
     @Id

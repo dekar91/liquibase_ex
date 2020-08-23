@@ -10,8 +10,8 @@ import java.util.Calendar;
 public class BasicEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP", nullable = false)
-    private Calendar created;
+    @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    private Calendar created = Calendar.getInstance();
 
     public Calendar getCreated() {
         return created;

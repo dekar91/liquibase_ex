@@ -23,7 +23,9 @@ public class UserEntity extends BasicEntity implements UserDetails {
     private String password;
     @Transient
     private String passwordConfirm;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @Transient
+//    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Column(columnDefinition = "bigint null")
@@ -31,7 +33,8 @@ public class UserEntity extends BasicEntity implements UserDetails {
 
 
 
-    @OneToMany
+//    @OneToMany
+    @Transient
     private List<HitEntity> hits;
 
     public UserEntity() {

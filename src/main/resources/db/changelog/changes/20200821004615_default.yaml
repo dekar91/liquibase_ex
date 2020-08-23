@@ -1,0 +1,227 @@
+databaseChangeLog:
+- changeSet:
+    id: 1597959981361-1
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: channel_id_seq
+        startValue: 1
+- changeSet:
+    id: 1597959981361-2
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: hit_id_seq
+        startValue: 1
+- changeSet:
+    id: 1597959981361-3
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: messenger_id_seq
+        startValue: 1
+- changeSet:
+    id: 1597959981361-4
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: role_id_seq
+        startValue: 1
+- changeSet:
+    id: 1597959981361-5
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: user_id_seq
+        startValue: 1
+- changeSet:
+    id: 1597959981361-6
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: channelPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: user_id
+            type: BIGINT
+        tableName: channel
+- changeSet:
+    id: 1597959981361-7
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: hitPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: data
+            type: VARCHAR(255)
+        - column:
+            name: channel_id
+            type: BIGINT
+        - column:
+            name: messenger_id
+            type: BIGINT
+        tableName: hit
+- changeSet:
+    id: 1597959981361-8
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: messengerPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: channel_id
+            type: BIGINT
+        - column:
+            name: user_id
+            type: BIGINT
+        tableName: messenger
+- changeSet:
+    id: 1597959981361-9
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: rolesPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: roles
+- changeSet:
+    id: 1597959981361-10
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: userPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: chat2desk_id
+            type: BIGINT null
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: username
+            type: VARCHAR(255)
+        tableName: user
+- changeSet:
+    id: 1597959981361-11
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: messenger
+        constraintName: FK4artb2d2esnd3nchjxjwq0xe0
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: user
+        validate: true
+- changeSet:
+    id: 1597959981361-12
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: channel
+        constraintName: FK63ahsnil6b4g7i7g9rkl0yrk9
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: user
+        validate: true
+- changeSet:
+    id: 1597959981361-13
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: channel_id
+        baseTableName: messenger
+        constraintName: FK8eatvbf1c8i03nfv0fm56p691
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: channel
+        validate: true
+- changeSet:
+    id: 1597959981361-14
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: channel_id
+        baseTableName: hit
+        constraintName: FKcjiqpqmtcfy1sb70tvbi92hre
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: channel
+        validate: true
+- changeSet:
+    id: 1597959981361-15
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: messenger_id
+        baseTableName: hit
+        constraintName: FKkb4ihrfi0fef0992i0cgadhcr
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: messenger
+        validate: true
+

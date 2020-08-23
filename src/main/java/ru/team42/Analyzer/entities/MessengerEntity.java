@@ -3,7 +3,7 @@ package ru.team42.analyzer.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "messengers")
+@Table(name = "messenger")
 public class MessengerEntity extends BasicEntity {
 
     @Id
