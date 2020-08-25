@@ -2,54 +2,40 @@ package ru.team42.analyzer.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.team42.analyzer.entities.ChannelEntity;
-import ru.team42.analyzer.entities.HitEntity;
-import ru.team42.analyzer.entities.Role;
-import ru.team42.analyzer.entities.UserEntity;
-import ru.team42.analyzer.repositories.HitRepository;
+import ru.team42.analyzer.dto.ChannelRenderSetting;
+import ru.team42.analyzer.services.interfaces.AppService;
 
 import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
-import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("api")
 @PermitAll
+@CrossOrigin(origins = "*")
 public class ApiController extends BasicController {
 
-    @Autowired
-    private HitRepository hitRepository;
 
-    @GetMapping
-    public String test(){
-        return "test";
+    private final AppService appService;
+
+    public ApiController(@Autowired AppService appService) {
+        this.appService = appService;
     }
 
-    @PostMapping("{channelId}/{messengerId}")
+    @GetMapping("config")
+    @ResponseBody
+    public List<ChannelRenderSetting> config(@RequestParam List<String> channels) {
+
+        return appService.configByJsClasses(channels);
+    }
+
+    @PostMapping("{channelId}")
     @ResponseBody
     @Transactional
-    public String hit(@PathVariable Long channelId, @PathVariable Long messengerId, @RequestBody String data) {
-        UserEntity user = new UserEntity();
+    public String hit(@PathVariable String channelId, @RequestBody String data) {
 
-        ChannelEntity channelEntity = new ChannelEntity();
-        channelEntity.setUser(user);
-
-        HitEntity entity = new HitEntity();
-        entity.setChannel(channelEntity);
-        entity.setData(data);
-
-        Role role = new Role();
-        role.setName("test");
-
-        entityManager.persist(role);
-
-        user.setRoles(Collections.singleton(role));
-        entityManager.persist(user);
-
-        entityManager.persist(channelEntity);
-        hitRepository.save(entity);
-
-        return "OK";
+        appService.hit(channelId, data);
+        return "ok";
     }
 
 }

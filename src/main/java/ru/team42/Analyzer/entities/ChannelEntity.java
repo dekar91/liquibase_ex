@@ -15,7 +15,7 @@ public class ChannelEntity extends BasicEntity {
     @JoinColumn(name="user_id", referencedColumnName="id")
     private UserEntity user;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
