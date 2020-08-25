@@ -8,7 +8,9 @@ buildscript {
     }
 }
 plugins {
-	id "org.asciidoctor.convert" version "1.5.9.2"
+	id 'org.asciidoctor.jvm.base' version '3.2.0'
+	id 'org.asciidoctor.jvm.convert' version '3.2.0'
+
 	id 'org.liquibase.gradle' version '2.0.4'
 	id 'org.springframework.boot' version '2.4.0-M1'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -19,12 +21,40 @@ group = 'ru.team42'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '13'
 
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
 asciidoctor {
-	sourceDir  file('docs')
+	dependsOn test
+	options doctype: 'book', backends : ['html5', 'pdf'], parallelMode: true
+
+	attributes = [
+			'source-highlighter': 'highlightjs',
+			'imagesdir'         : './images',
+			'toc'               : 'left',
+			'toclevels'         : 3,
+			'numbered'          : '',
+			'icons'             : 'font',
+			'setanchors'        : '',
+			'idprefix'          : '',
+			'idseparator'       : '-',
+			'docinfo1'          : '',
+			'safe-mode-unsafe'  : '',
+			'allow-uri-read'    : '',
+			'snippets'          : snippetsDir,
+			linkattrs           : true,
+			encoding            : 'utf-8'
+	]
+
+	inputs.dir snippetsDir
+	baseDir 'src/docs/asciidoc'
+	outputDir "build/asciidoc"
+	sourceDir 'src/docs/asciidoc'
 	sources {
-		include 'toplevel.adoc', 'another.adoc', 'third.adoc'
+		include 'index.adoc'
 	}
-	outputDir  file('build/docs')
 }
 
 configurations {
@@ -90,10 +120,9 @@ dependencies {
 
 	implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 
-
 	// Documentation
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
-	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.5'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	implementation 'org.liquibase:liquibase-core:4.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -116,9 +145,6 @@ dependencies {
 
 }
 
-ext {
-	snippetsDir = file('build/generated-snippets')
-}
 
 test {
 	systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
@@ -128,10 +154,6 @@ test {
 	outputs.dir snippetsDir
 }
 
-asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
-}
 
 static String getVersionName() {
 	try {
@@ -159,6 +181,13 @@ static String migrationName() {
 	def date = new Date()
 	def formattedDate = date.format('yyyyMMddHHmmss')
 	return formattedDate + '_' +  getVersionName()
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}/") {
+		into 'static/docs'
+	}
 }
 
 test {

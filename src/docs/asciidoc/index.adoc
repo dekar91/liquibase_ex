@@ -1,0 +1,14 @@
+== Rest convention
+include::rest_conv.adoc[]
+== Endpoints
+=== Speaker
+==== Get speaker by ID
+===== Curl example
+include::{snippets}/api/hit/curl-request.adoc[]
+===== HTTP Request
+include::{snippets}/api/hit/http-request.adoc[]
+===== HTTP Response
+====== Success HTTP responses
+include::{snippets}/api/hit/http-response.adoc[]
+====== Response fields
+\
