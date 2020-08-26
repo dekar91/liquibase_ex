@@ -9,6 +9,9 @@ import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Controller for hitting script
+ */
 @RestController
 @RequestMapping("api")
 @PermitAll
@@ -22,6 +25,11 @@ public class ApiController extends BasicController {
         this.appService = appService;
     }
 
+    /**
+     * Methoo returns configuration for the selected channels
+     * @param channels - Channels list
+     * @return Array of configurations
+     */
     @GetMapping("config")
     @ResponseBody
     public List<ChannelRenderSetting> config(@RequestParam List<String> channels) {
