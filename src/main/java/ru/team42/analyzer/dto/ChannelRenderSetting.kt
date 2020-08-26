@@ -1,6 +1,3 @@
 package ru.team42.analyzer.dto
 
-data class ChannelRenderSetting (
-        val js_class:String,
-        val url:String,
-)
+data class ChannelRenderSetting(var js_class: String, var url: String)
