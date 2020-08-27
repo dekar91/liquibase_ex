@@ -8,83 +8,83 @@ buildscript {
     }
 }
 plugins {
-	id 'org.asciidoctor.jvm.base' version '3.2.0'
-	id 'org.asciidoctor.jvm.convert' version '3.2.0'
+    id 'org.asciidoctor.jvm.base' version '3.2.0'
+    id 'org.asciidoctor.jvm.convert' version '3.2.0'
 
-	id 'org.liquibase.gradle' version '2.0.4'
-	id 'org.springframework.boot' version '2.4.0-M1'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'java'
+    id 'org.liquibase.gradle' version '2.0.4'
+    id 'org.springframework.boot' version '2.4.0-M1'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
 }
 
 group = 'ru.team42'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '13'
+sourceCompatibility = '11'
 
 
 ext {
-	snippetsDir = file('build/generated-snippets')
+    snippetsDir = file('build/generated-snippets')
 }
 
 asciidoctor {
-	dependsOn test
-	options doctype: 'book', backends : ['html5', 'pdf'], parallelMode: true
+    dependsOn test
+    options doctype: 'book', backends: ['html5', 'pdf'], parallelMode: true
 
-	attributes = [
-			'source-highlighter': 'highlightjs',
-			'imagesdir'         : './images',
-			'toc'               : 'left',
-			'toclevels'         : 3,
-			'numbered'          : '',
-			'icons'             : 'font',
-			'setanchors'        : '',
-			'idprefix'          : '',
-			'idseparator'       : '-',
-			'docinfo1'          : '',
-			'safe-mode-unsafe'  : '',
-			'allow-uri-read'    : '',
-			'snippets'          : snippetsDir,
-			linkattrs           : true,
-			encoding            : 'utf-8'
-	]
+    attributes = [
+            'source-highlighter': 'highlightjs',
+            'imagesdir'         : './images',
+            'toc'               : 'left',
+            'toclevels'         : 3,
+            'numbered'          : '',
+            'icons'             : 'font',
+            'setanchors'        : '',
+            'idprefix'          : '',
+            'idseparator'       : '-',
+            'docinfo1'          : '',
+            'safe-mode-unsafe'  : '',
+            'allow-uri-read'    : '',
+            'snippets'          : snippetsDir,
+            linkattrs           : true,
+            encoding            : 'utf-8'
+    ]
 
-	inputs.dir snippetsDir
-	baseDir 'src/docs/asciidoc'
-	outputDir "build/asciidoc"
-	sourceDir 'src/docs/asciidoc'
-	sources {
-		include 'index.adoc'
-	}
+    inputs.dir snippetsDir
+    baseDir 'src/docs/asciidoc'
+    outputDir "build/asciidoc"
+    sourceDir 'src/docs/asciidoc'
+    sources {
+        include 'index.adoc'
+    }
 }
 
 configurations {
-	liquibaseRuntime.extendsFrom runtime
+    liquibaseRuntime.extendsFrom runtime
 
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 
-	Properties liquibaseProps = new Properties()
-	liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.properties"))
+    Properties liquibaseProps = new Properties()
+    liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.properties"))
 
-	Properties applicationProps = new Properties()
-	applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
+    Properties applicationProps = new Properties()
+    applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
 
-	liquibase {
+    liquibase {
 
 
-		activities {
+        activities {
 
-			main {
-				referenceUrl 'hibernate:spring:'+ liquibaseProps.getProperty('liquibase.domain.package') +'?dialect='+applicationProps.getProperty('spring.jpa.database-platform')+'&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
-				driver applicationProps.getProperty('spring.datasource.driver-class-name')
-				changeLogFile liquibaseProps.getProperty('liquibase.changelog.path') + migrationName() + '.yaml'
-				url applicationProps.getProperty('spring.datasource.url')
-				username applicationProps.getProperty('spring.datasource.username')
-				password applicationProps.getProperty('spring.datasource.password')
-			}
-		}
-	}
+            main {
+                referenceUrl 'hibernate:spring:' + liquibaseProps.getProperty('liquibase.domain.package') + '?dialect=' + applicationProps.getProperty('spring.jpa.database-platform') + '&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+                driver applicationProps.getProperty('spring.datasource.driver-class-name')
+                changeLogFile liquibaseProps.getProperty('liquibase.changelog.path') + migrationName() + '.yaml'
+                url applicationProps.getProperty('spring.datasource.url')
+                username applicationProps.getProperty('spring.datasource.username')
+                password applicationProps.getProperty('spring.datasource.password')
+            }
+        }
+    }
 }
 
 repositories {
@@ -94,7 +94,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2020.0.0-SNAPSHOT")
+    set('springCloudVersion', "2020.0.0-SNAPSHOT")
 }
 
 apply plugin: "org.liquibase.gradle"
@@ -103,34 +103,34 @@ apply plugin: 'kotlin'
 
 dependencies {
 
-	liquibaseRuntime 'org.liquibase:liquibase-core:4.0.0'
-	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.2'
-	liquibaseRuntime 'org.postgresql:postgresql'
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.0.0'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.2'
+    liquibaseRuntime 'org.postgresql:postgresql'
 
-	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:4.0.0'
-	liquibaseRuntime sourceSets.main.output
+    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:4.0.0'
+    liquibaseRuntime sourceSets.main.output
 
-	liquibaseRuntime "ch.qos.logback:logback-core"
-	liquibaseRuntime "ch.qos.logback:logback-classic"
-	liquibaseRuntime 'org.yaml:snakeyaml'
-	liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
-	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-security'
-	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-web'
+    liquibaseRuntime "ch.qos.logback:logback-core"
+    liquibaseRuntime "ch.qos.logback:logback-classic"
+    liquibaseRuntime 'org.yaml:snakeyaml'
+    liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
+    liquibaseRuntime 'org.springframework.boot:spring-boot-starter-security'
+    liquibaseRuntime 'org.springframework.boot:spring-boot-starter-web'
 
-	implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 
 	// Documentation
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-	implementation 'org.liquibase:liquibase-core:4.0.0'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.liquibase:liquibase-core:4.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'io.projectreactor:reactor-test'
@@ -150,49 +150,23 @@ test {
 	systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
 }
 
-test {
-	outputs.dir snippetsDir
-}
-
-
-static String getVersionName() {
-	try {
-		def branchout = new ByteArrayOutputStream()
-		commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-
-		def branch = branchout.toString().trim()
-
-		if (branch.equals("master")) {
-			def stdout = new ByteArrayOutputStream()
-			commandLine 'git', 'describe', '--tags'
-
-			return stdout.toString().trim()
-		} else {
-			return branch;
-		}
-	}
-	catch (ignored) {
-		return 'default';
-	}
-}
-
-static String migrationName() {
-
-	def date = new Date()
-	def formattedDate = date.format('yyyyMMddHHmmss')
-	return formattedDate + '_' +  getVersionName()
-}
+//task publishAsciidoc(type: Copy){
+//    description 'Publish documentation'
+//    dependsOn asciidoctor
+//    from "${asciidoctor.outputDir}/"
+//    into 'static/docs'
+//
+//}
+//bootRun.dependsOn publishAsciidoc
+//bootJar.dependsOn publishAsciidoc
 
 bootJar {
-	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/") {
-		into 'static/docs'
-	}
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/") {
+        into 'static/docs'
+    }
 }
 
-test {
-	useJUnitPlatform()
-}
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
@@ -202,4 +176,57 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+asciidoctor.doLast {
+    copy {
+        from file("$buildDir/generated-docs/html5")
+        into file("$sourceSets.main.output.classesDirs/public")
+        include "index.html"
+    }
+}
+
+task repackDokka(type: Jar) {
+    zip64 true
+    destinationDirectory = file("$buildDir/dokka-repack")
+    from configurations.dokkaFatJar.collect { zipTree(it) }
+}
+
+dokka {
+    dependsOn repackDokka
+
+    outputFormat = "auto-restdocs-json"
+    outputDirectory = javadocJsonDir
+    configuration {
+        includeNonPublic = true
+        reportUndocumented = false
+    }
+}
+
+static String getVersionName() {
+    try {
+        def branchout = new ByteArrayOutputStream()
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+
+        def branch = branchout.toString().trim()
+
+        if (branch.equals("master")) {
+            def stdout = new ByteArrayOutputStream()
+            commandLine 'git', 'describe', '--tags'
+
+            return stdout.toString().trim()
+        } else {
+            return branch
+        }
+    }
+    catch (ignored) {
+        return 'default'
+    }
+}
+
+static String migrationName() {
+
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate + '_' + getVersionName()
 }

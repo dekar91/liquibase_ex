@@ -4,7 +4,7 @@ include::rest_conv.adoc[]
 === Speaker
 ==== Get speaker by ID
 ===== Curl example
-include::{snippets}/api/hit/curl-request.adoc[]
+include::{snippets}/api-controller-test/get-config/auto-request-parameters.adoc[]
 ===== HTTP Request
 include::{snippets}/api/hit/http-request.adoc[]
 ===== HTTP Response
