@@ -1,6 +1,7 @@
 package ru.team42.analyzer;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import ru.team42.analyzer.testsupport.MockMvcBase;
 
@@ -8,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest
 public class ApiControllerTest extends MockMvcBase {
 
     @Test

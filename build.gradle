@@ -7,54 +7,41 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
 plugins {
+    // Documentation
     id 'org.asciidoctor.jvm.base' version '3.2.0'
     id 'org.asciidoctor.jvm.convert' version '3.2.0'
 
     id 'org.liquibase.gradle' version '2.0.4'
-    id 'org.springframework.boot' version '2.4.0-M1'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+
+    id "org.jetbrains.dokka" version "$dokkaPluginVersion"
+    id "org.jetbrains.kotlin.jvm" version "${kotlinVersion}"
     id 'java'
 }
 
 group = 'ru.team42'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 
-ext {
-    snippetsDir = file('build/generated-snippets')
+    maven { url 'https://dl.bintray.com/kotlin/dokka' }
+    maven { url 'https://jitpack.io' }
+
 }
 
-asciidoctor {
-    dependsOn test
-    options doctype: 'book', backends: ['html5', 'pdf'], parallelMode: true
-
-    attributes = [
-            'source-highlighter': 'highlightjs',
-            'imagesdir'         : './images',
-            'toc'               : 'left',
-            'toclevels'         : 3,
-            'numbered'          : '',
-            'icons'             : 'font',
-            'setanchors'        : '',
-            'idprefix'          : '',
-            'idseparator'       : '-',
-            'docinfo1'          : '',
-            'safe-mode-unsafe'  : '',
-            'allow-uri-read'    : '',
-            'snippets'          : snippetsDir,
-            linkattrs           : true,
-            encoding            : 'utf-8'
-    ]
-
-    inputs.dir snippetsDir
-    baseDir 'src/docs/asciidoc'
-    outputDir "build/asciidoc"
-    sourceDir 'src/docs/asciidoc'
-    sources {
-        include 'index.adoc'
-    }
+ext {
+    // Documentation
+    snippetsDir = file('build/generated-snippets')
+    javadocJsonDir = file("$buildDir/generated-javadoc-json")
 }
 
 configurations {
@@ -87,22 +74,29 @@ configurations {
     }
 }
 
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
+// Documentation
+configurations {
+    dokkaFatJar
 }
-
-ext {
-    set('springCloudVersion', "2020.0.0-SNAPSHOT")
-}
-
-apply plugin: "org.liquibase.gradle"
-apply plugin: 'kotlin'
-
 
 dependencies {
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
+
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+    // Migrations
+    implementation 'org.liquibase:liquibase-core:4.0.0'
     liquibaseRuntime 'org.liquibase:liquibase-core:4.0.0'
     liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.2'
     liquibaseRuntime 'org.postgresql:postgresql'
@@ -114,28 +108,25 @@ dependencies {
     liquibaseRuntime "ch.qos.logback:logback-classic"
     liquibaseRuntime 'org.yaml:snakeyaml'
     liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+
     liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
     liquibaseRuntime 'org.springframework.boot:spring-boot-starter-security'
     liquibaseRuntime 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 
-	// Documentation
-	implementation "io.springfox:springfox-boot-starter:3.0.0"
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    // Documentation
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+    implementation "capital.scalable:spring-auto-restdocs-core:$springAutoRestDocsVersion"
 
-    implementation 'org.liquibase:liquibase-core:4.0.0'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    dokkaFatJar "org.jetbrains.dokka:dokka-gradle-plugin:0.9.16"
+    dokkaFatJar "capital.scalable:spring-auto-restdocs-dokka-json:2.0.1"
 
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    dokkaRuntime "capital.scalable:spring-auto-restdocs-dokka-json:$springAutoRestDocsVersion"
+    dokkaRuntime "org.jetbrains.dokka:dokka-fatjar:0.10.1"
 
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'io.projectreactor:reactor-test'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-//	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation "org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:$springRestDocsVersion"
 
 
 	// Tests
@@ -145,36 +136,50 @@ dependencies {
 
 }
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
 
 test {
 	systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
 }
 
-//task publishAsciidoc(type: Copy){
-//    description 'Publish documentation'
-//    dependsOn asciidoctor
-//    from "${asciidoctor.outputDir}/"
-//    into 'static/docs'
-//
-//}
-//bootRun.dependsOn publishAsciidoc
-//bootJar.dependsOn publishAsciidoc
 
-bootJar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/") {
-        into 'static/docs'
-    }
-}
+asciidoctor {
+    dependsOn dokka
+    options doctype: 'book', backends: ['html5', 'pdf'], parallelMode: true
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
+    attributes = [
+            'source-highlighter': 'highlightjs',
+            'imagesdir'         : './images',
+            'toc'               : 'left',
+            'toclevels'         : 3,
+            'numbered'          : '',
+            'icons'             : 'font',
+            'setanchors'        : '',
+            'idprefix'          : '',
+            'idseparator'       : '-',
+            'docinfo1'          : '',
+            'safe-mode-unsafe'  : '',
+            'allow-uri-read'    : '',
+            'snippets'          : snippetsDir,
+            linkattrs           : true,
+            encoding            : 'utf-8'
+    ]
+
+    inputs.dir snippetsDir
+    baseDir 'src/docs/asciidoc'
+    outputDir "build/asciidoc"
+    sourceDir 'src/docs/asciidoc'
+    sources {
+        include 'index.adoc'
     }
 }
 
@@ -186,10 +191,26 @@ asciidoctor.doLast {
     }
 }
 
+
+//task publishAsciidoc(type: Copy){
+//    description 'Publish documentation'
+//    dependsOn asciidoctor
+//    from "${asciidoctor.outputDir}/"
+//    into 'static/docs'
+//
+//}
+//bootRun.dependsOn publishAsciidoc
+//bootJar.dependsOn publishAsciidoc
+
+
 task repackDokka(type: Jar) {
     zip64 true
     destinationDirectory = file("$buildDir/dokka-repack")
     from configurations.dokkaFatJar.collect { zipTree(it) }
+}
+
+configurations {
+    dokkaFatJar
 }
 
 dokka {
