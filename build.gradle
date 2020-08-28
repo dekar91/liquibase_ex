@@ -191,7 +191,15 @@ asciidoctor.doLast {
     }
 }
 
+task publishAsciidoc(type: Copy){
+    description 'Publish documentation'
+    dependsOn asciidoctor
+    from "${asciidoctor.outputDir}/"
+    into 'src/main/resources/static/docs/'
 
+}
+
+// TODO: publication for jar
 //task publishAsciidoc(type: Copy){
 //    description 'Publish documentation'
 //    dependsOn asciidoctor
