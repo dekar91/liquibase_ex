@@ -1,25 +1,41 @@
 package ru.team42.analyzer.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class UserEntity extends BasicEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
-    @SequenceGenerator(name="user_generator", sequenceName = "user_id_seq")
+    @SequenceGenerator(name="user_generator", sequenceName = "user_id_seq", allocationSize = 1)
     private Long id;
-    @Size(min=2, message = "Не меньше 5 знаков")
+
+    @NotNull
+    @Size(min=5, message = "Не меньше 5 знаков")
     private String username;
-    @Size(min=2, message = "Не меньше 5 знаков")
+
+    @NotNull
+    @Size(min=5, message = "Не меньше 5 знаков")
     private String password;
     @Transient
     private String passwordConfirm;
@@ -105,5 +121,13 @@ public class UserEntity extends BasicEntity implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public long getChat2DeskId() {
+        return chat2DeskId;
+    }
+
+    public void setChat2DeskId(long chat2DeskId) {
+        this.chat2DeskId = chat2DeskId;
     }
 }

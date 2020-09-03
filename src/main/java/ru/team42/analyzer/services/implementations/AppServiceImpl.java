@@ -1,15 +1,17 @@
 package ru.team42.analyzer.services.implementations;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.team42.analyzer.dto.ChannelRenderSetting;
-import ru.team42.analyzer.entities.ChannelEntity;
+import ru.team42.analyzer.dto.HitRequest;
+import ru.team42.analyzer.dto.MessengerType;
+import ru.team42.analyzer.dto.response.ButtonApiSettingsResponse;
+import ru.team42.analyzer.entities.ButtonEntity;
 import ru.team42.analyzer.entities.HitEntity;
-import ru.team42.analyzer.entities.Role;
 import ru.team42.analyzer.entities.UserEntity;
-import ru.team42.analyzer.repositories.ChannelRepository;
+import ru.team42.analyzer.repositories.ButtonRepository;
 import ru.team42.analyzer.repositories.HitRepository;
-import ru.team42.analyzer.services.interfaces.AppService;
+import ru.team42.analyzer.services.interfaces.ApiService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,71 +23,49 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-public class AppServiceImpl implements AppService {
+public class AppServiceImpl implements ApiService {
 
     @PersistenceContext
     protected EntityManager entityManager;
 
-    private final ChannelRepository channelRepository;
+    private final ButtonRepository buttonRepository;
     private final HitRepository hitRepository;
 
-    AppServiceImpl(@Autowired ChannelRepository channelRepository, @Autowired HitRepository hitRepository) {
-        this.channelRepository = channelRepository;
+    @Autowired
+    AppServiceImpl(ButtonRepository buttonRepository, HitRepository hitRepository) {
+        this.buttonRepository = buttonRepository;
         this.hitRepository = hitRepository;
     }
 
-    public List<ChannelRenderSetting> configByJsClasses(List<String> channels) {
+    public List<ButtonApiSettingsResponse> getConfig(List<String> channels) {
+        List<ButtonApiSettingsResponse> buttonSettings = new ArrayList<>();
+        AtomicInteger i = new AtomicInteger();
 
         List<Long> c = channels.stream().mapToLong(x -> Long.parseLong(x.split("_")[1])).boxed().collect(Collectors.toList());
 
-        List<ChannelRenderSetting> channelSettings = new ArrayList<>();
-
-        AtomicInteger i = new AtomicInteger();
-
-        channelRepository.findAllById(c).forEach(cl -> {
-            channelSettings.add(new ChannelRenderSetting( channels.get(i.getAndIncrement()).toString(), "https://vk.com/" + cl.getId()));
+        buttonRepository.findAllById(c).forEach(cl -> {
+            buttonSettings.add(new ButtonApiSettingsResponse( channels.get(i.getAndIncrement()), MessengerType.TELEGRAM, "", Collections.emptyList()));
         });
 
-        return channelSettings;
+        return buttonSettings;
     }
 
-    public List<ChannelRenderSetting> config(List<Long> channels) {
 
-        List<ChannelRenderSetting> channelSettings = new ArrayList<>();
-
-        channelRepository.findAllById(channels).forEach(c -> {
-            channelSettings.add(new ChannelRenderSetting(c.getId().toString() + '_', "https://vk.com/" + c.getId()));
-        });
-
-        return channelSettings;
-    }
-
-    private Long extractChannelId(String entityString) {
+    private static Long extractButtonId(String entityString) {
         String[] parts = entityString.split("_");
 
         return parts.length > 0 ? Long.parseLong(parts[1]) : null;
     }
 
-    public String hit(String channelId, String data) {
+    public void hit(HitRequest data) {
         UserEntity user = new UserEntity();
 
-        ChannelEntity channelEntity = channelRepository.findById(Objects.requireNonNull(extractChannelId(channelId))).orElse(null);
+        ButtonEntity buttonEntity = buttonRepository.findById(Objects.requireNonNull(extractButtonId(data.getButtonId()))).orElse(null);
 
-        HitEntity entity = new HitEntity();
-        entity.setChannel(channelEntity);
-        entity.setData(data);
+        HitEntity hitEntity = new HitEntity();
 
-        Role role = new Role();
-        role.setName("test");
+        BeanUtils.copyProperties(data, hitEntity);
 
-        entityManager.persist(role);
-
-        user.setRoles(Collections.singleton(role));
-        entityManager.persist(user);
-
-        entityManager.persist(channelEntity);
-        hitRepository.save(entity);
-
-        return "OK";
+        hitRepository.save(hitEntity);
     }
 }

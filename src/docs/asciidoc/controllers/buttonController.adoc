@@ -1,0 +1,12 @@
+=== Button
+This is a CRUD operation entity for sale buttons
+
+include::{snippets}/button-controller-test/get-list/auto-section.adoc[]
+
+include::{snippets}/button-controller-test/get-entity/auto-section.adoc[]
+
+include::{snippets}/button-controller-test/create-entity/auto-section.adoc[]
+
+include::{snippets}/button-controller-test/update-entity/auto-section.adoc[]
+
+include::{snippets}/button-controller-test/delete-entity/auto-section.adoc[]

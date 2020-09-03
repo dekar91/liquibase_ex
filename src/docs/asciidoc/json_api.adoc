@@ -1,0 +1,54 @@
+== JSON:API
+We use simplified JSON:API format as a basement for all responses from the API:
+
+[source, json]
+----
+{
+    "data": {
+    },
+    "errors": [
+
+    ],
+    "meta": {
+    }
+}
+----
+
+* _"data"_ contents response payloads. Empty object for response with errors;
+* _"errors"_ contents array of errors. Empty if no errors;
+* Either _"data"_ or _"errors"_ fields filled;
+* _"meta"_ can content any meta information about response (pagination, sorting etc.)
+
+=== Example of successful response:
+[source, json]
+----
+{
+    "data": {
+      "id": 123,
+      "content": "Hello"
+    },
+    "errors": [],
+    "meta": {
+      "page": 3,
+      "sorting": "id"
+    }
+}
+----
+
+=== Example of failed response:
+[source, json]
+----
+{
+    "data": {
+      "id": 123,
+      "content": "Hello"
+    },
+    "errors": [{
+      "title": "Username must not be empty",
+      "code": 405,
+      "source": "user_123"
+    }],
+    "meta": {
+     }
+}
+----

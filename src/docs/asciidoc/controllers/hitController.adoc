@@ -1,0 +1,12 @@
+=== Hit
+This is a CRUD operation entity for sale hits
+
+include::{snippets}/hit-controller-test/get-list/auto-section.adoc[]
+
+include::{snippets}/hit-controller-test/get-entity/auto-section.adoc[]
+
+include::{snippets}/hit-controller-test/create-entity/auto-section.adoc[]
+
+include::{snippets}/hit-controller-test/update-entity/auto-section.adoc[]
+
+include::{snippets}/hit-controller-test/delete-entity/auto-section.adoc[]

@@ -1,0 +1,12 @@
+=== Integration
+This is a CRUD operation entity for sale integrations
+
+include::{snippets}/integration-controller-test/get-list/auto-section.adoc[]
+
+include::{snippets}/integration-controller-test/get-entity/auto-section.adoc[]
+
+include::{snippets}/integration-controller-test/create-entity/auto-section.adoc[]
+
+include::{snippets}/integration-controller-test/update-entity/auto-section.adoc[]
+
+include::{snippets}/integration-controller-test/delete-entity/auto-section.adoc[]

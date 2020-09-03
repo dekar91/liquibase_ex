@@ -1,10 +1,39 @@
+// TODO: try to separate migration name generation to another file
+// TODO: update dokka plugin to prepare for Gradle 7.
+
 buildscript {
-    ext.kotlin_version = '1.4.0'
+    ext {
+        kotlinVersion = "1.4.0"
+
+        springBootVersion = "2.3.3.RELEASE"
+
+        // Documentation
+        springAutoRestDocsVersion = "2.0.10-SNAPSHOT"
+        springRestDocsVersion = "2.0.4.RELEASE"
+        dokkaPluginVersion = "0.10.1"
+    }
+
     repositories {
+
+        jcenter()
+        mavenLocal()
         mavenCentral()
+
+        maven {
+            // Auto Rest Doc
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
+
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+
+        // Documentation
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaPluginVersion"
     }
 }
 
@@ -58,7 +87,6 @@ configurations {
     applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
 
     liquibase {
-
 
         activities {
 
@@ -123,16 +151,29 @@ dependencies {
     dokkaFatJar "capital.scalable:spring-auto-restdocs-dokka-json:2.0.1"
 
     dokkaRuntime "capital.scalable:spring-auto-restdocs-dokka-json:$springAutoRestDocsVersion"
-    dokkaRuntime "org.jetbrains.dokka:dokka-fatjar:0.10.1"
+    dokkaRuntime "org.jetbrains.dokka:dokka-fatjar:$dokkaPluginVersion"
 
     testImplementation "org.springframework.restdocs:spring-restdocs-core:$springRestDocsVersion"
     testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:$springRestDocsVersion"
 
+    implementation "com.google.guava:guava:29.0-jre"
 
-	// Tests
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.4.RELEASE'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // Tests
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module: "commons-logging")
+    }
+
+    testImplementation "com.jayway.jsonpath:json-path-assert"
+    testImplementation 'org.springframework.security:spring-security-test'
 
 }
 
@@ -148,7 +189,11 @@ compileTestKotlin {
 }
 
 test {
-	systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
+    systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
+    systemProperty "org.springframework.restdocs.javadocJsonDir", javadocJsonDir
+
+    useJUnitPlatform()
+    dependsOn dokka
 }
 
 

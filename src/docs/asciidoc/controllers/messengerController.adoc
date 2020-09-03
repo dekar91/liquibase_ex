@@ -1,0 +1,12 @@
+=== Messenger
+This is a CRUD operation entity for messengers
+
+include::{snippets}/messenger-controller-test/get-list/auto-section.adoc[]
+
+include::{snippets}/messenger-controller-test/get-entity/auto-section.adoc[]
+
+include::{snippets}/messenger-controller-test/create-entity/auto-section.adoc[]
+
+include::{snippets}/messenger-controller-test/update-entity/auto-section.adoc[]
+
+include::{snippets}/messenger-controller-test/delete-entity/auto-section.adoc[]

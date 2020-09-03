@@ -1,46 +1,86 @@
 databaseChangeLog:
 - changeSet:
-    id: 1597959981361-1
+    id: 1598657335304-1
     author: dekar (generated)
     changes:
     - createSequence:
-        incrementBy: 50
+        incrementBy: 1
+        sequenceName: button_id_seq
+        startValue: 1
+- changeSet:
+    id: 1598657335304-2
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 1
         sequenceName: channel_id_seq
         startValue: 1
 - changeSet:
-    id: 1597959981361-2
+    id: 1598657335304-3
     author: dekar (generated)
     changes:
     - createSequence:
-        incrementBy: 50
+        incrementBy: 1
         sequenceName: hit_id_seq
         startValue: 1
 - changeSet:
-    id: 1597959981361-3
+    id: 1598657335304-4
     author: dekar (generated)
     changes:
     - createSequence:
-        incrementBy: 50
+        incrementBy: 1
+        sequenceName: integration_id_seq
+        startValue: 1
+- changeSet:
+    id: 1598657335304-5
+    author: dekar (generated)
+    changes:
+    - createSequence:
+        incrementBy: 1
         sequenceName: messenger_id_seq
         startValue: 1
 - changeSet:
-    id: 1597959981361-4
+    id: 1598657335304-6
     author: dekar (generated)
     changes:
     - createSequence:
-        incrementBy: 50
+        incrementBy: 1
         sequenceName: role_id_seq
         startValue: 1
 - changeSet:
-    id: 1597959981361-5
+    id: 1598657335304-7
     author: dekar (generated)
     changes:
     - createSequence:
-        incrementBy: 50
+        incrementBy: 1
         sequenceName: user_id_seq
         startValue: 1
 - changeSet:
-    id: 1597959981361-6
+    id: 1598657335304-8
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: buttonPK
+            name: id
+            type: BIGINT
+        - column:
+            defaultValueComputed: CURRENT_TIMESTAMP
+            name: created
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: channel_id
+            type: BIGINT
+        - column:
+            name: messenger_id
+            type: BIGINT
+        tableName: button
+- changeSet:
+    id: 1598657335304-9
     author: dekar (generated)
     changes:
     - createTable:
@@ -61,7 +101,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: channel
 - changeSet:
-    id: 1597959981361-7
+    id: 1598657335304-10
     author: dekar (generated)
     changes:
     - createTable:
@@ -78,17 +118,40 @@ databaseChangeLog:
             name: created
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
+            name: action
+            type: VARCHAR(255)
+        - column:
             name: data
             type: VARCHAR(255)
         - column:
-            name: channel_id
-            type: BIGINT
+            name: url
+            type: VARCHAR(255)
         - column:
-            name: messenger_id
+            name: button_id
             type: BIGINT
         tableName: hit
 - changeSet:
-    id: 1597959981361-8
+    id: 1598657335304-11
+    author: dekar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: integrationPK
+            name: id
+            type: BIGINT
+        - column:
+            name: settings
+            type: VARCHAR(255)
+        - column:
+            name: type
+            type: VARCHAR(255)
+        tableName: integration
+- changeSet:
+    id: 1598657335304-12
     author: dekar (generated)
     changes:
     - createTable:
@@ -105,14 +168,17 @@ databaseChangeLog:
             name: created
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
-            name: channel_id
-            type: BIGINT
+            name: type
+            type: VARCHAR(255)
         - column:
             name: user_id
             type: BIGINT
+        - column:
+            name: messenger_id
+            type: BIGINT
         tableName: messenger
 - changeSet:
-    id: 1597959981361-9
+    id: 1598657335304-13
     author: dekar (generated)
     changes:
     - createTable:
@@ -133,7 +199,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         tableName: roles
 - changeSet:
-    id: 1597959981361-10
+    id: 1598657335304-14
     author: dekar (generated)
     changes:
     - createTable:
@@ -142,7 +208,7 @@ databaseChangeLog:
             constraints:
               nullable: false
               primaryKey: true
-              primaryKeyName: userPK
+              primaryKeyName: usersPK
             name: id
             type: BIGINT
         - column:
@@ -158,70 +224,83 @@ databaseChangeLog:
         - column:
             name: username
             type: VARCHAR(255)
-        tableName: user
+        tableName: users
 - changeSet:
-    id: 1597959981361-11
+    id: 1598657335304-15
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: messenger_id
+        baseTableName: button
+        constraintName: FK4emsbcmnbm20sgboovjso14ko
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: messenger
+        validate: true
+- changeSet:
+    id: 1598657335304-16
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: channel_id
+        baseTableName: button
+        constraintName: FKb6ig7iyima9t169d8yxedi77l
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: channel
+        validate: true
+- changeSet:
+    id: 1598657335304-17
+    author: dekar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: button_id
+        baseTableName: hit
+        constraintName: FKdcu0kjlg5iu22bu5n8hbic2u6
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: button
+        validate: true
+- changeSet:
+    id: 1598657335304-18
     author: dekar (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: messenger
-        constraintName: FK4artb2d2esnd3nchjxjwq0xe0
+        constraintName: FKjd8noe30g6xsx3ej87ept4aog
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: id
-        referencedTableName: user
+        referencedTableName: users
         validate: true
 - changeSet:
-    id: 1597959981361-12
+    id: 1598657335304-19
     author: dekar (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: channel
-        constraintName: FK63ahsnil6b4g7i7g9rkl0yrk9
+        constraintName: FKrd5yacda6xym26d9l8ccehddb
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: id
-        referencedTableName: user
+        referencedTableName: users
         validate: true
 - changeSet:
-    id: 1597959981361-13
-    author: dekar (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: channel_id
-        baseTableName: messenger
-        constraintName: FK8eatvbf1c8i03nfv0fm56p691
-        deferrable: false
-        initiallyDeferred: false
-        referencedColumnNames: id
-        referencedTableName: channel
-        validate: true
-- changeSet:
-    id: 1597959981361-14
-    author: dekar (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: channel_id
-        baseTableName: hit
-        constraintName: FKcjiqpqmtcfy1sb70tvbi92hre
-        deferrable: false
-        initiallyDeferred: false
-        referencedColumnNames: id
-        referencedTableName: channel
-        validate: true
-- changeSet:
-    id: 1597959981361-15
+    id: 1598657335304-20
     author: dekar (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: messenger_id
-        baseTableName: hit
-        constraintName: FKkb4ihrfi0fef0992i0cgadhcr
+        baseTableName: messenger
+        constraintName: FKt8dmpm1rchnnf23q5seh1anjd
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: id
-        referencedTableName: messenger
+        referencedTableName: channel
         validate: true
 

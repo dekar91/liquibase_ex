@@ -1,14 +1,27 @@
+= Analyzer API documentation
+
+This documentation describes interaction methods with analyzer backed.
+The API uses REST convention as main agreement.
+
 == Rest convention
 include::rest_conv.adoc[]
-== Endpoints
-=== Speaker
-==== Get speaker by ID
-===== Curl example
-include::{snippets}/api-controller-test/get-config/auto-request-parameters.adoc[]
-===== HTTP Request
-include::{snippets}/api/hit/http-request.adoc[]
-===== HTTP Response
-====== Success HTTP responses
-include::{snippets}/api/hit/http-response.adoc[]
-====== Response fields
-\
+== JSON API
+include::json_api.adoc[]
+
+== Internal endpoints
+
+=== Authorization
+
+Under development
+
+These are endpoint for user management panel
+
+include::controllers/buttonController.adoc[]
+
+include::controllers/channelController.adoc[]
+
+include::controllers/hitController.adoc[]
+
+include::controllers/integrationController.adoc[]
+
+include::controllers/messengerController.adoc[]

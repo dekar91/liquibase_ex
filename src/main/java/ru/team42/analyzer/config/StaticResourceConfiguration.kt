@@ -38,8 +38,8 @@ open class StaticResourceConfiguration : WebMvcConfigurer {
 //            .addResolver(PathResourceResolver())
 //    }
 //
-//    override fun addViewControllers(registry: ViewControllerRegistry) {
-//        registry.addViewController("/docs")
-//            .setViewName("forward:/docs/index.html")
-//    }
+    override fun addViewControllers(registry: ViewControllerRegistry) {
+        registry.addViewController("/docs")
+            .setViewName("forward:/docs/index.html")
+    }
 }

@@ -93,7 +93,7 @@ abstract class MockMvcBase {
                             requestFields(), responseFields(), pathParameters(),
                             requestParameters(), description(), methodAndPath(),
                             section(), authorization(DEFAULT_AUTHORIZATION),
-                            modelAttribute(requestMappingHandlerAdapter.getArgumentResolvers())))
+                            modelAttribute(requestMappingHandlerAdapter.argumentResolvers)))
             .build()
     }
 

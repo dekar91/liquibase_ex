@@ -1,0 +1,12 @@
+=== Channel
+This is a CRUD operation entity for sale channels
+
+include::{snippets}/channel-controller-test/get-list/auto-section.adoc[]
+
+include::{snippets}/channel-controller-test/get-entity/auto-section.adoc[]
+
+include::{snippets}/channel-controller-test/create-entity/auto-section.adoc[]
+
+include::{snippets}/channel-controller-test/update-entity/auto-section.adoc[]
+
+include::{snippets}/channel-controller-test/delete-entity/auto-section.adoc[]
