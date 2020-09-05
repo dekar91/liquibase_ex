@@ -3,6 +3,7 @@ package ru.team42.analyzer.services.implementations;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.team42.analyzer.dto.response.RoleDto;
 import ru.team42.analyzer.dto.response.UserDto;
 import ru.team42.analyzer.entities.UserEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAll(Long id) {
+    public List<UserDto> getAll() {
         return userRepository.findAll().parallelStream()
                 .map(UserServiceImpl::wrapEntity)
                 .collect(Collectors.toList());

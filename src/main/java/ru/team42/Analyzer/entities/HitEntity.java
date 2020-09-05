@@ -31,4 +31,17 @@ public class HitEntity extends BasicEntity {
     @Column
     private String data;
 
+    public void setButtonId(Long id) {
+        if(id != null) {
+            ButtonEntity entity = new ButtonEntity();
+            entity.setId(id);
+            entity.setId(id);
+            this.setButton(entity);
+        }
+    }
+
+    public Long getButtonId() {
+        return  this.button != null ? this.button.getId() : null;
+    }
+
 }

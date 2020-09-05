@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import ru.team42.analyzer.dto.response.IntegrationDto;
 import ru.team42.analyzer.entities.IntegrationEntity;
+import ru.team42.analyzer.entities.IntegrationType;
 import ru.team42.analyzer.entities.UserEntity;
 import ru.team42.analyzer.jsonApi.ApiResponse;
 import ru.team42.analyzer.repositories.IntegrationRepository;
@@ -76,6 +77,7 @@ public class IntegrationControllerTest extends MockMvcBase {
     public void getEntity() throws Exception {
         IntegrationEntity entity = new IntegrationEntity();
         entity.setName("test");
+        entity.setType(IntegrationType.GOOGLE);
 
         IntegrationEntity savedEntity = integrationRepository.save(entity);
 
@@ -98,7 +100,7 @@ public class IntegrationControllerTest extends MockMvcBase {
 
     @Test
     public void createEntity() throws Exception {
-        IntegrationDto dto = new IntegrationDto(null, "test create" + mockedUser.getId());
+        IntegrationDto dto = new IntegrationDto(null, "test create" + mockedUser.getId(), IntegrationType.GOOGLE, null);
 
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
@@ -126,10 +128,12 @@ public class IntegrationControllerTest extends MockMvcBase {
 
         IntegrationEntity entity = new IntegrationEntity();
         entity.setName("test" + mockedUser.getId());
+        entity.setType(IntegrationType.GOOGLE);
+
         entity = integrationRepository.save(entity);
 
         String newName = entity.getName() + mockedUser.getId();
-        IntegrationDto dto = new IntegrationDto(entity.getId(), newName);
+        IntegrationDto dto = new IntegrationDto(entity.getId(), newName, entity.getType(), null);
 
         String j = objectMapper.writeValueAsString(dto);
         var result = this.mockMvc.perform(put("/integration")
@@ -155,6 +159,8 @@ public class IntegrationControllerTest extends MockMvcBase {
     public void deleteEntity() throws Exception {
         IntegrationEntity entity = new IntegrationEntity();
         entity.setName("Test delete");
+        entity.setType(IntegrationType.GOOGLE);
+
         entity = integrationRepository.save(entity);
 
         this.mockMvc.perform(delete("/integration/" + entity.getId())

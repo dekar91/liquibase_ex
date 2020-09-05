@@ -3,14 +3,15 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.4.0"
+        kotlinVersion = '1.4.0'
 
-        springBootVersion = "2.3.3.RELEASE"
+        springBootVersion = '2.3.3.RELEASE'
+        lombokVersion = '1.18.12'
 
         // Documentation
-        springAutoRestDocsVersion = "2.0.10-SNAPSHOT"
-        springRestDocsVersion = "2.0.4.RELEASE"
-        dokkaPluginVersion = "0.10.1"
+        springAutoRestDocsVersion = '2.0.10-SNAPSHOT'
+        springRestDocsVersion = '2.0.4.RELEASE'
+        dokkaPluginVersion = '0.10.1'
     }
 
     repositories {
@@ -81,10 +82,10 @@ configurations {
     }
 
     Properties liquibaseProps = new Properties()
-    liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.properties"))
+    liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.yml"))
 
     Properties applicationProps = new Properties()
-    applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
+    applicationProps.load(new FileInputStream("src/main/resources/application.yml"))
 
     liquibase {
 
@@ -108,14 +109,15 @@ configurations {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 
@@ -158,13 +160,12 @@ dependencies {
 
     implementation "com.google.guava:guava:29.0-jre"
 
-
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.12'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     // Tests
     testImplementation 'io.projectreactor:reactor-test'

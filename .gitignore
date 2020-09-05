@@ -34,3 +34,4 @@ out/
 .vscode/
 src/main/resources/db/changelog/db-diff.yaml
 src/main/resources/application-*.properties
+src/main/resources/application-*.yml

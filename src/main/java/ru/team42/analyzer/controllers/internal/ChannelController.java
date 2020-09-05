@@ -1,14 +1,19 @@
 package ru.team42.analyzer.controllers.internal;
 
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.team42.analyzer.controllers.BasicController;
 import ru.team42.analyzer.dto.response.ChannelDto;
-import ru.team42.analyzer.entities.ChannelEntity;
 import ru.team42.analyzer.jsonApi.ApiResponse;
-import ru.team42.analyzer.repositories.ChannelRepository;
 import ru.team42.analyzer.services.interfaces.ChannelService;
 
 import java.util.List;
@@ -20,12 +25,10 @@ import java.util.List;
 @RequestMapping("channel")
 public class ChannelController extends BasicController {
 
-    private final ChannelRepository channelRepository;
     private final ChannelService channelService;
 
     @Autowired
-    ChannelController(ChannelRepository channelRepository, ChannelService channelService) {
-        this.channelRepository = channelRepository;
+    ChannelController(ChannelService channelService) {
         this.channelService = channelService;
     }
 
@@ -34,8 +37,8 @@ public class ChannelController extends BasicController {
      */
     @GetMapping("list")
     @ResponseBody
-    public ApiResponse<List<ChannelEntity>> getList() {
-        return ApiResponse.buildWithData(Lists.newArrayList(channelRepository.findAll()));
+    public ApiResponse<List<ChannelDto>> getList() {
+        return ApiResponse.buildWithData(channelService.getAll());
     }
 
 
@@ -48,24 +51,22 @@ public class ChannelController extends BasicController {
 
     @PostMapping()
     @ResponseBody
-    public ApiResponse<ChannelEntity> createChannel(@RequestBody ChannelEntity channel) {
-        channelRepository.save(channel);
+    public ApiResponse<ChannelDto> createChannel(@RequestBody ChannelDto channel) {
 
-        return ApiResponse.buildWithData(channel);
+        return ApiResponse.buildWithData(channelService.save(channel));
     }
 
 
     @PutMapping
     @ResponseBody
-    public  ApiResponse<ChannelEntity> updateChannel(@RequestBody ChannelEntity channel) {
-        channelRepository.save(channel);
+    public  ApiResponse<ChannelDto> updateChannel(@RequestBody ChannelDto channel) {
 
-        return ApiResponse.buildWithData(channel);
+        return ApiResponse.buildWithData(channelService.save(channel));
     }
 
     @DeleteMapping("{id}")
     public ApiResponse<Boolean> deleteChannel(@PathVariable("id") Long id) {
-        channelRepository.deleteById(id);
+        channelService.delete(id);
 
         return ApiResponse.buildWithData(true);
     }

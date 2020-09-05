@@ -5,7 +5,9 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.team42.analyzer.jsonApi.ApiResponse;
 import ru.team42.analyzer.jsonApi.ResponseError;
 
@@ -67,6 +69,13 @@ public class ServiceErrorHandler {
     public ApiResponse<Void> handleException(AccessDeniedException ex) {
         return buildApiResponse(HttpStatus.FORBIDDEN.value(), ex.getMessage());
 
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(value=HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ApiResponse<Void> requestHandlingNoHandlerFound(final NoHandlerFoundException ex) {
+        return buildApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

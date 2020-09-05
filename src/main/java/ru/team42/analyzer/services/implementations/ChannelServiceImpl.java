@@ -9,50 +9,12 @@ import ru.team42.analyzer.entities.ChannelEntity;
 import ru.team42.analyzer.repositories.ChannelRepository;
 import ru.team42.analyzer.services.interfaces.ChannelService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
-public class ChannelServiceImpl implements ChannelService {
-
-    private final ChannelRepository channelRepository;
-    private final ConversionService conversionService;
+public class ChannelServiceImpl extends BasicService<ChannelEntity, ChannelDto> implements ChannelService {
 
     @Autowired
-    ChannelServiceImpl(ChannelRepository channelRepository, ConversionService conversionService) {
-        this.channelRepository = channelRepository;
-        this.conversionService = conversionService;
+    ChannelServiceImpl(ChannelRepository repository, ConversionService conversionService) {
+        super(repository, conversionService, ChannelEntity.class, ChannelDto.class);
     }
-
-    @Override
-    public List<ChannelDto> getAll(Long id) {
-        return channelRepository.findAll().stream()
-                .map(entity -> conversionService.convert(entity, ChannelDto.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public ChannelDto getById(Long id) {
-        return conversionService.convert(channelRepository.findById(id).orElse(null), ChannelDto.class);
-    }
-
-    @Override
-    public ChannelDto save(ChannelDto dto) {
-        ChannelEntity channelEntity = conversionService.convert(dto, ChannelEntity.class);
-
-        if(channelEntity != null) {
-            channelEntity = channelRepository.save(channelEntity);
-
-            return conversionService.convert(channelEntity, ChannelDto.class);
-        }
-
-        return dto;
-    }
-
-    @Override
-    public void delete(Long id) {
-        channelRepository.deleteById(id);
-    }
-
 }

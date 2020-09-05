@@ -1,12 +1,19 @@
 package ru.team42.analyzer.controllers.internal;
 
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.team42.analyzer.controllers.BasicController;
-import ru.team42.analyzer.entities.IntegrationEntity;
+import ru.team42.analyzer.dto.response.IntegrationDto;
 import ru.team42.analyzer.jsonApi.ApiResponse;
-import ru.team42.analyzer.repositories.IntegrationRepository;
+import ru.team42.analyzer.services.interfaces.IntegrationService;
 
 import java.util.List;
 
@@ -17,46 +24,44 @@ import java.util.List;
 @RequestMapping("integration")
 public class IntegrationController extends BasicController {
 
-    private final IntegrationRepository integrationRepository;
+    private final IntegrationService integrationService;
 
     @Autowired
-    IntegrationController(IntegrationRepository integrationRepository) {
-        this.integrationRepository = integrationRepository;
+    IntegrationController(IntegrationService integrationService) {
+        this.integrationService = integrationService;
     }
 
     @GetMapping("list")
     @ResponseBody
-    public ApiResponse<List<IntegrationEntity>> getList() {
-        return ApiResponse.buildWithData(Lists.newArrayList(integrationRepository.findAll()));
+    public ApiResponse<List<IntegrationDto>> getList() {
+        return ApiResponse.buildWithData(integrationService.getAll());
     };
 
 
     @GetMapping("{id}")
     @ResponseBody
-    public ApiResponse<IntegrationEntity> getIntegration(@PathVariable("id") Long id) {
-        return ApiResponse.buildWithData(integrationRepository.findById(id).orElse(null));
+    public ApiResponse<IntegrationDto> getIntegration(@PathVariable("id") Long id) {
+        return ApiResponse.buildWithData(integrationService.getById(id));
     };
 
     @PostMapping()
     @ResponseBody
-    public ApiResponse<IntegrationEntity> createIntegration(@RequestBody IntegrationEntity integration) {
-        integrationRepository.save(integration);
+    public ApiResponse<IntegrationDto> createIntegration(@RequestBody IntegrationDto integration) {
 
-        return ApiResponse.buildWithData(integration);
+        return ApiResponse.buildWithData(integrationService.save(integration));
     }
 
 
     @PutMapping()
     @ResponseBody
-    public  ApiResponse<IntegrationEntity> updateIntegration(@RequestBody IntegrationEntity integration) {
-        integrationRepository.save(integration);
+    public  ApiResponse<IntegrationDto> updateIntegration(@RequestBody IntegrationDto integration) {
+        return ApiResponse.buildWithData(integrationService.save(integration));
 
-        return ApiResponse.buildWithData(integration);
     }
 
     @DeleteMapping("{id}")
     public ApiResponse<Boolean> deleteIntegration(@PathVariable("id") Long id) {
-        integrationRepository.deleteById(id);
+        integrationService.delete(id);
 
         return ApiResponse.buildWithData(true);
     }

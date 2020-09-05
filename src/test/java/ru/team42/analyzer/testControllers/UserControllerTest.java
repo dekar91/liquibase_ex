@@ -2,7 +2,7 @@ package ru.team42.analyzer.testControllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@Ignore
+@Disabled
 public class UserControllerTest extends MockMvcBase {
 
     @Autowired
@@ -73,7 +73,7 @@ public class UserControllerTest extends MockMvcBase {
 
 
     @Test
-    @Ignore
+    @Disabled
     public void createEntity() throws Exception {
         UserDto dto = new UserDto(null, "test create", Collections.emptySet(), 1L);
 
@@ -129,7 +129,7 @@ public class UserControllerTest extends MockMvcBase {
 
 
     @Test
-    @Ignore
+    @Disabled
     public void deleteEntity() throws Exception {
         UserEntity entity = new UserEntity();
         entity.setUsername("testtesttest");

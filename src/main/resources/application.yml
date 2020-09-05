@@ -1,0 +1,43 @@
+application:
+  description: Chat2Desk enhanced analyzer module
+  version: 1.0
+springdoc:
+  version: 1
+spring:
+  application:
+    name: Chat2Desk analyzer
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: qwerty
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Europe/Moscow
+    show-sql: false
+
+# Swagger
+# http://localhost:8080/swagger/swagger-ui/index.html
+# http://localhost:8080/swagger/swagger-resources
+#logging.level.springfox.documentation=DEBUG
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: /swagger
+      enabled: false
+swagger:
+  contact:
+    name: Team42
+    url: http://chat2desk.com
+  externalDoc:
+    description: Team42
+    url: /docs/index.html

@@ -1,14 +1,19 @@
 package ru.team42.analyzer.controllers.internal;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.team42.analyzer.controllers.BasicController;
-import ru.team42.analyzer.entities.MessengerEntity;
+import ru.team42.analyzer.dto.response.MessengerDto;
 import ru.team42.analyzer.jsonApi.ApiResponse;
-import ru.team42.analyzer.repositories.MessengerRepository;
+import ru.team42.analyzer.services.interfaces.MessengerService;
 
 import java.util.List;
 
@@ -19,46 +24,44 @@ import java.util.List;
 @RequestMapping("messenger")
 public class MessengerController extends BasicController {
 
-    private final MessengerRepository messengerRepository;
+    private final MessengerService messengerService;
 
     @Autowired
-    MessengerController(MessengerRepository messengerRepository) {
-        this.messengerRepository = messengerRepository;
+    MessengerController(MessengerService messengerService) {
+        this.messengerService = messengerService;
     }
 
     @GetMapping("list")
     @ResponseBody
-    public ApiResponse<List<MessengerEntity>> getList() {
-        return ApiResponse.buildWithData(Lists.newArrayList(messengerRepository.findAll()));
-    };
+    public ApiResponse<List<MessengerDto>> getList() {
+        return ApiResponse.buildWithData(
+                messengerService.getAll()
+        );
+    }
 
 
     @GetMapping("{id}")
     @ResponseBody
-    public ApiResponse<MessengerEntity> getMessenger(@PathVariable("id") Long id) {
-        return ApiResponse.buildWithData(messengerRepository.findById(id).orElse(null));
-    };
+    public ApiResponse<MessengerDto> getMessenger(@PathVariable("id") Long id) {
+        return ApiResponse.buildWithData(messengerService.getById(id));
+    }
 
     @PostMapping()
     @ResponseBody
-    public ApiResponse<MessengerEntity> createMessenger(@RequestBody MessengerEntity messenger) {
-        messengerRepository.save(messenger);
-
-        return ApiResponse.buildWithData(messenger);
+    public ApiResponse<MessengerDto> createMessenger(@RequestBody MessengerDto messenger) {
+        return ApiResponse.buildWithData(messengerService.save(messenger));
     }
 
 
     @PutMapping()
     @ResponseBody
-    public  ApiResponse<MessengerEntity> updateMessenger(@RequestBody MessengerEntity messenger) {
-        messengerRepository.save(messenger);
-
-        return ApiResponse.buildWithData(messenger);
+    public  ApiResponse<MessengerDto> updateMessenger(@RequestBody MessengerDto messenger) {
+        return ApiResponse.buildWithData(messengerService.save(messenger));
     }
 
     @DeleteMapping("{id}")
     public ApiResponse<Boolean> deleteMessenger(@PathVariable("id") Long id) {
-        messengerRepository.deleteById(id);
+        messengerService.delete(id);
 
         return ApiResponse.buildWithData(true);
     }

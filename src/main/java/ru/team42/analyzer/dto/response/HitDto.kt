@@ -6,7 +6,7 @@ import javax.persistence.JoinColumn
 
 data class HitDto(
         val id: Long?,
-        val buttonId: Long,
+        val buttonId: Long?,
         val url: String?,
         val action: String?,
         val data: String? = null

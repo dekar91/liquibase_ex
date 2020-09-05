@@ -1,0 +1,5 @@
+liquibase:
+  changelog:
+    path: src/main/resources/db/changelog/changes/
+  domain:
+    package: ru.team42.analyzer.entities

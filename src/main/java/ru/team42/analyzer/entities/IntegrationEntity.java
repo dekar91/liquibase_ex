@@ -14,7 +14,7 @@ public class IntegrationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "integration_generator")
     @SequenceGenerator(name="integration_generator", sequenceName = "integration_id_seq", allocationSize = 1)
-    private long id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column

@@ -25,7 +25,7 @@ public class MessengerEntity extends BasicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messenger_generator")
     @SequenceGenerator(name="messenger_generator", sequenceName = "messenger_id_seq", allocationSize = 1)
-    private long id;
+    private Long id;
 
     @Column
     private String name;
@@ -38,8 +38,14 @@ public class MessengerEntity extends BasicEntity {
     @Column
     private MessengerType type;
 
-
     public Long getUserId() {
         return user != null ? user.getId() : null;
+    }
+    public void setUserId(Long id) {
+        if(id != null) {
+            UserEntity entity =  new UserEntity();
+            entity.setId(id);
+            this.setUser(entity);
+        }
     }
 }
