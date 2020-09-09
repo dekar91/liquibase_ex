@@ -6,5 +6,5 @@ import ru.team42.analyzer.entities.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-
+    UserEntity findByUsername(String username);
 }

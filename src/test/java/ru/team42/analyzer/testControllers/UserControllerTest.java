@@ -75,7 +75,7 @@ public class UserControllerTest extends MockMvcBase {
     @Test
     @Disabled
     public void createEntity() throws Exception {
-        UserDto dto = new UserDto(null, "test create", Collections.emptySet(), 1L);
+        UserDto dto = new UserDto(null, "testCreate", "pasword123", Collections.emptySet(), 1L);
 
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
@@ -106,7 +106,7 @@ public class UserControllerTest extends MockMvcBase {
         userRepository.save(entity);
 
         String newName = entity.getUsername() + "123";
-        UserDto dto = new UserDto(entity.getId(), "test create", Collections.emptySet(), 1L);
+        UserDto dto = new UserDto(entity.getId(), "testCreate", "pasword123", Collections.emptySet(), 1L);
 
 
         String j = objectMapper.writeValueAsString(dto);

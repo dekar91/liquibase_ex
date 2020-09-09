@@ -60,7 +60,7 @@ public class ChannelControllerTest extends MockMvcBase {
     @Test
     public void getList() throws Exception {
 
-        this.mockMvc.perform(get("/channel/list")
+        this.mockMvc.perform(get("/channel/list").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ public class ChannelControllerTest extends MockMvcBase {
         entity.setUser(mockedUser);
         ChannelEntity savedEntity = channelRepository.save(entity);
 
-        var result = this.mockMvc.perform(get("/channel/" + savedEntity.getId())
+        var result = this.mockMvc.perform(get("/channel/" + savedEntity.getId()).with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class ChannelControllerTest extends MockMvcBase {
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
 
-        var result = this.mockMvc.perform(post("/channel")
+        var result = this.mockMvc.perform(post("/channel").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -131,7 +131,7 @@ public class ChannelControllerTest extends MockMvcBase {
 
 
         String j = objectMapper.writeValueAsString(dto);
-        var result = this.mockMvc.perform(put("/channel")
+        var result = this.mockMvc.perform(put("/channel").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -158,7 +158,7 @@ public class ChannelControllerTest extends MockMvcBase {
 
         entity = channelRepository.save(entity);
 
-        this.mockMvc.perform(delete("/channel/" + entity.getId())
+        this.mockMvc.perform(delete("/channel/" + entity.getId()).with(userToken())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

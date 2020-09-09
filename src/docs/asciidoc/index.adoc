@@ -10,9 +10,7 @@ include::json_api.adoc[]
 
 == Internal endpoints
 
-=== Authorization
-
-Under development
+include::authorization.adoc[]
 
 These are endpoint for user management panel
 

@@ -95,7 +95,7 @@ public class HitControllerTest extends MockMvcBase {
     @Test
     public void getList() throws Exception {
 
-        this.mockMvc.perform(get("/hit/list")
+        this.mockMvc.perform(get("/hit/list").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -109,7 +109,7 @@ public class HitControllerTest extends MockMvcBase {
         entity.setButton(this.mockedButton);
         HitEntity savedEntity = hitRepository.save(entity);
 
-        var result = this.mockMvc.perform(get("/hit/" + savedEntity.getId())
+        var result = this.mockMvc.perform(get("/hit/" + savedEntity.getId()).with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -133,7 +133,7 @@ public class HitControllerTest extends MockMvcBase {
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
 
-        var result = this.mockMvc.perform(post("/hit")
+        var result = this.mockMvc.perform(post("/hit").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -164,7 +164,7 @@ public class HitControllerTest extends MockMvcBase {
         HitDto dto = new HitDto(entity.getId(), this.mockedButton.getId(), "http://test.com", newName, "{}");
 
         String j = objectMapper.writeValueAsString(dto);
-        var result = this.mockMvc.perform(put("/hit")
+        var result = this.mockMvc.perform(put("/hit").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -192,7 +192,7 @@ public class HitControllerTest extends MockMvcBase {
         hitRepository.save(entity);
 
 
-        this.mockMvc.perform(delete("/hit/" + entity.getId())
+        this.mockMvc.perform(delete("/hit/" + entity.getId()).with(userToken())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

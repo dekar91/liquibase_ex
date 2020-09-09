@@ -64,7 +64,7 @@ public class MessengerControllerTest extends MockMvcBase {
     @Test
     public void getList() throws Exception {
 
-        this.mockMvc.perform(get("/messenger/list")
+        this.mockMvc.perform(get("/messenger/list").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class MessengerControllerTest extends MockMvcBase {
         entity.setUser(mockedUser);
         MessengerEntity savedEntity = messengerRepository.save(entity);
 
-        var result = this.mockMvc.perform(get("/messenger/" + savedEntity.getId())
+        var result = this.mockMvc.perform(get("/messenger/" + savedEntity.getId()).with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -102,7 +102,7 @@ public class MessengerControllerTest extends MockMvcBase {
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
 
-        var result = this.mockMvc.perform(post("/messenger")
+        var result = this.mockMvc.perform(post("/messenger").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -132,7 +132,7 @@ public class MessengerControllerTest extends MockMvcBase {
         MessengerDto dto = new MessengerDto(entity.getId(), newName, mockedUser.getId());
 
         String j = objectMapper.writeValueAsString(dto);
-        var result = this.mockMvc.perform(put("/messenger")
+        var result = this.mockMvc.perform(put("/messenger").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -158,7 +158,7 @@ public class MessengerControllerTest extends MockMvcBase {
         entity = messengerRepository.save(entity);
         entity.setUser(mockedUser);
 
-        this.mockMvc.perform(delete("/messenger/" + entity.getId())
+        this.mockMvc.perform(delete("/messenger/" + entity.getId()).with(userToken())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

@@ -1,5 +1,10 @@
 package ru.team42.analyzer.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -15,6 +20,10 @@ import ru.team42.analyzer.dto.converters.IntegrationDtoToIntegrationEntityConver
 import ru.team42.analyzer.dto.converters.IntegrationEntityToIntegrationDtoConverter;
 import ru.team42.analyzer.dto.converters.MessengerDtoToMessengerEntityConverter;
 import ru.team42.analyzer.dto.converters.MessengerEntityToMessengerDtoConverter;
+import ru.team42.analyzer.dto.converters.RoleDtoToRoleEntityConverter;
+import ru.team42.analyzer.dto.converters.RoleEntityToRoleDtoConverter;
+import ru.team42.analyzer.dto.converters.UserDtoToUserEntityConverter;
+import ru.team42.analyzer.dto.converters.UserEntityToUserDtoConverter;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
@@ -35,6 +44,12 @@ public class AppConfig implements WebMvcConfigurer {
 
         registry.addConverter(new MessengerDtoToMessengerEntityConverter());
         registry.addConverter(new MessengerEntityToMessengerDtoConverter());
+
+        registry.addConverter(new UserDtoToUserEntityConverter());
+        registry.addConverter(new UserEntityToUserDtoConverter());
+
+        registry.addConverter(new RoleDtoToRoleEntityConverter());
+        registry.addConverter(new RoleEntityToRoleDtoConverter());
     }
 
     @Bean
@@ -42,6 +57,21 @@ public class AppConfig implements WebMvcConfigurer {
         DispatcherServlet ds = new DispatcherServlet();
         ds.setThrowExceptionIfNoHandlerFound(true);
         return ds;
+    }
+
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        return customizer -> customizer
+                .featuresToEnable(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS)
+                .featuresToDisable(
+                        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                        DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE
+                )
+                .modulesToInstall(
+                        new KotlinModule(),
+                        new JavaTimeModule()
+                )
+                .serializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
 }

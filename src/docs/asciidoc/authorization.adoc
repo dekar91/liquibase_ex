@@ -1,0 +1,28 @@
+=== Authorization
+
+All methods of for public API (`/api/*`)  and `/auth/login` do not require authorization.
+All remained methods must be authorized.
+Project uses https://jwt.io[JsonWebToken] to authorized requests.
+
+=== Get token:
+Use /auth/login to get token:
+
+include::{snippets}/auth-controller-test/test-success-login/http-request.adoc[]
+
+*Response*:
+
+include::{snippets}/auth-controller-test/test-success-login/http-response.adoc[]
+
+
+==== Use token:
+Provide `Authorization: Bearer` header for each request, which needs authorization.
+
+[source, http request]
+----
+GET http://localhost:8080/channel/list
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTIzIiwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE1OTk0ODE1MDcsImV4cCI6MTU5OTQ4NTEwN30.d2fnAmozwYy7G7bsR-IXqLKkrhN0QDkd-M2t2lGLZBs
+Cache-Control: no-cache
+Content-Type: application/json
+
+----
+

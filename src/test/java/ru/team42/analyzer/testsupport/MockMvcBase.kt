@@ -1,22 +1,3 @@
-/*-
- * #%L
- * Spring Auto REST Docs Kotlin Web MVC Example Project
- * %%
- * Copyright (C) 2015 - 2020 Scalable Capital GmbH
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
 package ru.team42.analyzer.testsupport
 
 import capital.scalable.restdocs.AutoDocumentation.*
@@ -24,12 +5,17 @@ import capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson
 import capital.scalable.restdocs.misc.AuthorizationSnippet.documentAuthorization
 import capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength
 import capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.hamcrest.Matchers.*
+import org.apache.tomcat.util.json.JSONParserTokenManager
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.notNullValue
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.convert.ConversionService
 import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
@@ -44,13 +30,26 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.RequestPostProcessor
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.util.Base64Utils
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
+import ru.team42.analyzer.dto.request.AuthRequest
+import ru.team42.analyzer.dto.response.AuthResponse
+import ru.team42.analyzer.dto.response.ButtonDto
+import ru.team42.analyzer.dto.response.RoleDto
+import ru.team42.analyzer.dto.response.UserDto
+import ru.team42.analyzer.entities.RoleEntity
+import ru.team42.analyzer.entities.UserEntity
+import ru.team42.analyzer.jsonApi.ApiResponse
+import ru.team42.analyzer.repositories.RoleRepository
+import ru.team42.analyzer.repositories.UserRepository
+import ru.team42.analyzer.services.interfaces.UserService
 import javax.servlet.Filter
+
 
 private const val DEFAULT_AUTHORIZATION = "Resource is public."
 
@@ -65,7 +64,7 @@ abstract class MockMvcBase {
     private lateinit var context: WebApplicationContext
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    lateinit var objectMapper: ObjectMapper
 
     @Autowired
     private lateinit var springSecurityFilterChain: Filter
@@ -75,9 +74,37 @@ abstract class MockMvcBase {
 
     protected lateinit var mockMvc: MockMvc
 
+    @Autowired
+    private lateinit var userRepository:UserRepository
+
+    @Autowired
+    private lateinit var userService:UserService
+
+    @JvmField protected var TEST_USER_LOGIN:String = "test_user"
+    @JvmField protected var TEST_USER_PASSWORD:String = "test_user123"
+    @JvmField protected var TEST_USER_ROLE:String = "ROLE_USER"
+
+    private lateinit var testUser:UserEntity
+
+    @Autowired
+    private lateinit var conversionService:ConversionService
+
+    private fun createTestUser() {
+
+        val userDto:UserDto = userService.createUser(TEST_USER_LOGIN, TEST_USER_PASSWORD, setOf(RoleDto(null, TEST_USER_ROLE)))
+        this.testUser = conversionService.convert(userDto, UserEntity::class.java)!!
+    }
+
+    @AfterEach
+    fun deleteTestUser() {
+        userRepository.delete(this.testUser)
+    }
 
     @BeforeEach
     fun setUp(restDocumentation: RestDocumentationContextProvider) {
+
+        this.createTestUser()
+
         this.mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .addFilters<DefaultMockMvcBuilder>(springSecurityFilterChain)
@@ -91,9 +118,8 @@ abstract class MockMvcBase {
                     .and().snippets()
                     .withDefaults(curlRequest(), httpRequest(), httpResponse(),
                             requestFields(), responseFields(), pathParameters(),
-                            requestParameters(), description(), methodAndPath(),
-                            section(), authorization(DEFAULT_AUTHORIZATION),
-                            modelAttribute(requestMappingHandlerAdapter.argumentResolvers)))
+                            requestParameters(), authorization(DEFAULT_AUTHORIZATION), description(), methodAndPath(),
+                            section(), modelAttribute(requestMappingHandlerAdapter.argumentResolvers)))
             .build()
     }
 
@@ -113,7 +139,7 @@ abstract class MockMvcBase {
             // Authorization headers or cookies for users should be added here as well.
             val accessToken: String
             try {
-                accessToken = getAccessToken("test", "test")
+                accessToken = getAccessToken(TEST_USER_LOGIN, TEST_USER_PASSWORD)
             } catch (e: Exception) {
                 throw RuntimeException(e)
             }
@@ -123,32 +149,29 @@ abstract class MockMvcBase {
         }
     }
 
+
+
     @Throws(Exception::class)
     private fun getAccessToken(username: String, password: String): String {
-        val authorization = "Basic " + String(Base64Utils.encode("app:very_secret".toByteArray()))
-        val contentType = MediaType.APPLICATION_JSON.toString() + ";charset=UTF-8"
+
+        val dto = AuthRequest(username, password)
+        val o = ObjectMapper()
+        val j = o.writeValueAsString(dto)
 
         val body = mockMvc
             .perform(
-                    post("/oauth/token")
-                            .header("Authorization", authorization)
+                    post("/login")
                             .contentType(
-                                    MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("username", username)
-                            .param("password", password)
-                            .param("grant_type", "password")
-                            .param("scope", "read write")
-                            .param("client_id", "app")
-                            .param("client_secret", "very_secret"))
+                                    MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(j)
+            )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.access_token", `is`(notNullValue())))
-            .andExpect(jsonPath("$.token_type", `is`(equalTo("bearer"))))
-            .andExpect(jsonPath("$.refresh_token", `is`(notNullValue())))
-            .andExpect(jsonPath("$.expires_in", `is`(greaterThan(4000))))
-            .andExpect(jsonPath("$.scope", `is`(equalTo("read write"))))
+            .andExpect(jsonPath("$.data.token", `is`(notNullValue())))
             .andReturn().response.contentAsString
 
-        return body.substring(17, 53)
+        val response:ApiResponse<AuthResponse> = objectMapper.readValue(body, object:TypeReference<ApiResponse<AuthResponse>>(){})
+
+        return response.data.token
     }
 }

@@ -83,7 +83,7 @@ public class ButtonControllerTest extends MockMvcBase {
     @Test
     public void getList() throws Exception {
 
-        this.mockMvc.perform(get("/button/list")
+        this.mockMvc.perform(get("/button/list").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ public class ButtonControllerTest extends MockMvcBase {
         ButtonEntity entity = new ButtonEntity();
         ButtonEntity savedEntity = buttonRepository.save(entity);
 
-        var result = this.mockMvc.perform(get("/button/" + savedEntity.getId())
+        var result = this.mockMvc.perform(get("/button/" + savedEntity.getId()).with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -120,7 +120,7 @@ public class ButtonControllerTest extends MockMvcBase {
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
 
-        var result = this.mockMvc.perform(post("/button")
+        var result = this.mockMvc.perform(post("/button").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -152,7 +152,7 @@ public class ButtonControllerTest extends MockMvcBase {
         ButtonDto dto = new ButtonDto(entity.getId(), newName, mockedChannel.getId(), mockedMessenger.getId());
 
         String j = objectMapper.writeValueAsString(dto);
-        var result = this.mockMvc.perform(put("/button")
+        var result = this.mockMvc.perform(put("/button").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -180,7 +180,7 @@ public class ButtonControllerTest extends MockMvcBase {
 
         entity = buttonRepository.save(entity);
 
-        this.mockMvc.perform(delete("/button/" + entity.getId())
+        this.mockMvc.perform(delete("/button/" + entity.getId()).with(userToken())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

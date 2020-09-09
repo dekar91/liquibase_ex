@@ -10,7 +10,7 @@ class DocumentationTest : MockMvcBase() {
 
     @Test
     fun docsForwarding() {
-        mockMvc.perform(get("/docs"))
+        mockMvc.perform(get("/docs").with(userToken()))
             .andExpect(status().isOk)
             .andExpect(forwardedUrl("/docs/index.html"))
     }

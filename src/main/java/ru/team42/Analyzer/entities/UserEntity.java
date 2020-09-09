@@ -1,5 +1,7 @@
 package ru.team42.analyzer.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,18 +9,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Builder
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -31,21 +38,21 @@ public class UserEntity extends BasicEntity implements UserDetails {
     private Long id;
 
     @NotNull
-    @Size(min=5, message = "Не меньше 5 знаков")
+    @Size(min=3, message = "Не меньше 5 знаков")
+    @Column(unique = true)
     private String username;
 
     @NotNull
-    @Size(min=5, message = "Не меньше 5 знаков")
+    @Size(min=3, message = "Не меньше 5 знаков")
     private String password;
     @Transient
     private String passwordConfirm;
 
-    @Transient
-//    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<RoleEntity> roles;
 
     @Column(columnDefinition = "bigint null")
-    private long chat2DeskId;
+    private Long chat2DeskId;
 
 
 
@@ -115,19 +122,28 @@ public class UserEntity extends BasicEntity implements UserDetails {
         this.passwordConfirm = passwordConfirm;
     }
 
-    public Set<Role> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 
-    public long getChat2DeskId() {
+    public Long getChat2DeskId() {
         return chat2DeskId;
     }
 
-    public void setChat2DeskId(long chat2DeskId) {
+    public void setChat2DeskId(Long chat2DeskId) {
         this.chat2DeskId = chat2DeskId;
+    }
+
+    public void addRole(RoleEntity role) {
+        if(this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+
+        this.roles.add(role);
+
     }
 }

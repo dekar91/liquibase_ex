@@ -65,7 +65,7 @@ public class IntegrationControllerTest extends MockMvcBase {
     @Test
     public void getList() throws Exception {
 
-        this.mockMvc.perform(get("/integration/list")
+        this.mockMvc.perform(get("/integration/list").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -81,7 +81,7 @@ public class IntegrationControllerTest extends MockMvcBase {
 
         IntegrationEntity savedEntity = integrationRepository.save(entity);
 
-        var result = this.mockMvc.perform(get("/integration/" + savedEntity.getId())
+        var result = this.mockMvc.perform(get("/integration/" + savedEntity.getId()).with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -105,7 +105,7 @@ public class IntegrationControllerTest extends MockMvcBase {
         ObjectMapper o = new ObjectMapper();
         String j = o.writeValueAsString(dto);
 
-        var result = this.mockMvc.perform(post("/integration")
+        var result = this.mockMvc.perform(post("/integration").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -136,7 +136,7 @@ public class IntegrationControllerTest extends MockMvcBase {
         IntegrationDto dto = new IntegrationDto(entity.getId(), newName, entity.getType(), null);
 
         String j = objectMapper.writeValueAsString(dto);
-        var result = this.mockMvc.perform(put("/integration")
+        var result = this.mockMvc.perform(put("/integration").with(userToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(j)
                 .accept(MediaType.APPLICATION_JSON))
@@ -163,7 +163,7 @@ public class IntegrationControllerTest extends MockMvcBase {
 
         entity = integrationRepository.save(entity);
 
-        this.mockMvc.perform(delete("/integration/" + entity.getId())
+        this.mockMvc.perform(delete("/integration/" + entity.getId()).with(userToken()).with(userToken())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

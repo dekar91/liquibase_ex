@@ -58,6 +58,12 @@ public final class ApiResponse<T> {
         errors = new LinkedList<>();
     }
 
+    public ApiResponse(T data, List errors, MetaInfo meta) {
+        this.data = data;
+        this.errors = errors;
+        this.meta = meta;
+    }
+
     public T getData() {
         return data;
     }

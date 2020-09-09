@@ -19,7 +19,7 @@ We use simplified JSON:API format as a basement for all responses from the API:
 * Either _"data"_ or _"errors"_ fields filled;
 * _"meta"_ can content any meta information about response (pagination, sorting etc.)
 
-=== Example of successful response:
+=== Successful response:
 [source, json]
 ----
 {
@@ -35,7 +35,7 @@ We use simplified JSON:API format as a basement for all responses from the API:
 }
 ----
 
-=== Example of failed response:
+=== Failed response:
 [source, json]
 ----
 {

@@ -7,7 +7,8 @@ import javax.validation.constraints.Size
 
 class UserDto (
     val id: Long? = null,
-    val username: @NotNull @Size(min = 5, message = "Не меньше 5 знаков") String? = null,
+    val username: @NotNull @Size(min = 3, message = "Не меньше 3 знаков") String? = null,
+    val password: String? = null,
     val roles: Set<RoleDto>? = Collections.emptySet(),
     val chat2DeskId: Long? = null,
 )

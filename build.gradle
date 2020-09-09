@@ -1,5 +1,6 @@
 // TODO: try to separate migration name generation to another file
 // TODO: update dokka plugin to prepare for Gradle 7.
+// TODO: move to Yaml config
 
 buildscript {
     ext {
@@ -82,10 +83,10 @@ configurations {
     }
 
     Properties liquibaseProps = new Properties()
-    liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.yml"))
+    liquibaseProps.load(new FileInputStream("src/main/resources/liquibase.properties"))
 
     Properties applicationProps = new Properties()
-    applicationProps.load(new FileInputStream("src/main/resources/application.yml"))
+    applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
 
     liquibase {
 
@@ -115,9 +116,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    implementation 'io.jsonwebtoken:jjwt:0.8.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 
