@@ -1,6 +1,6 @@
-= Analyzer API documentation
+= example API documentation
 
-This documentation describes interaction methods with analyzer backed.
+This documentation describes interaction methods with example backed.
 The API uses REST convention as main agreement.
 
 == Rest convention

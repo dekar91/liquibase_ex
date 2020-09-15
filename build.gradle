@@ -4,7 +4,7 @@
 
 buildscript {
     ext {
-        kotlinVersion = '1.4.0'
+        kotlinVersion = '1.4.10'
 
         springBootVersion = '2.3.3.RELEASE'
         lombokVersion = '1.18.12'
@@ -53,7 +53,7 @@ plugins {
     id 'java'
 }
 
-group = 'ru.team42'
+group = 'ru.team'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -89,10 +89,9 @@ configurations {
     applicationProps.load(new FileInputStream("src/main/resources/application.properties"))
 
     liquibase {
-
         activities {
-
             main {
+                classpath "$projectDir/src/main/resources/db/changelog"
                 referenceUrl 'hibernate:spring:' + liquibaseProps.getProperty('liquibase.domain.package') + '?dialect=' + applicationProps.getProperty('spring.jpa.database-platform') + '&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
                 driver applicationProps.getProperty('spring.datasource.driver-class-name')
                 changeLogFile liquibaseProps.getProperty('liquibase.changelog.path') + migrationName() + '.yaml'
